@@ -17,8 +17,8 @@ const song = midiFileParser(midiBlob);
 log(song.tracks[0].length)
 
 
-let activeNotesByNumber = {};
-let notes = [];
+const activeNotesByNumber = {};
+const notes = [];
 let time = 0;
 _.each(song.tracks[0], event => {
   if (event.type !== 'channel') return;
@@ -44,3 +44,40 @@ _.each(notes, note => log([note.time.start, note.time.duration, note.number, not
 log(notes.length);
 // logJson(activeNotesByNumber);
 // console.log(JSON.stringify(song,0,2));
+
+const findExtrema = (xs, f1, f2) => {
+  f1 = f1 || (x=>x);
+  f2 = f2 || f1;
+  return _.reduce(xs, (acc,x) => ({
+    min: _.min([acc.min,f1(x)]),
+    max: _.max([acc.max,f2(x)]),
+  }),{
+    min: f1(xs[0]),
+    max: f2(xs[0]),
+  });
+
+}
+
+log(findExtrema([4,3,5,7,9,61,3]));
+log(findExtrema([4,3,5,7,-9,61,3], x=>-x));
+log(findExtrema([4,3,5,7,-9,61,3], x=>-x, x=>x*x));
+
+// const extrema = {
+//   time: {
+//     min: _.minBy(notes, note=>note.time.start),
+//     max: _.maxBy(notes, note=>note.time.end),
+//   },
+//   velocity: {
+//     min: _.minBy(notes, 'velocity'),
+//     max: _.maxBy(notes, 'velocity'),
+//   },
+// };
+const noteExtrema = {
+  time:     findExtrema(notes, note=>note.time.start, note=>note.time.end),
+  velocity: findExtrema(notes, note=>note.velocity),
+  number:   findExtrema(notes, note=>note.number),
+};
+logJson(noteExtrema);
+
+
+
