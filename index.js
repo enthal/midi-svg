@@ -14,7 +14,7 @@ const logJson = x => log(toJsonInd(x));
 const midiBlob = fs.readFileSync('levels.mid', 'binary');
 const song = midiFileParser(midiBlob);
 
-log(song.tracks[0].length)
+// log(song.tracks[0].length)
 
 
 const activeNotesByNumber = {};
@@ -40,8 +40,8 @@ _.each(song.tracks[0], event => {
   }
 });
 // logJson(notes);
-_.each(notes, note => log([note.time.start, note.time.duration, note.number, note.name].join('\t')));
-log(notes.length);
+// _.each(notes, note => log([note.time.start, note.time.duration, note.number, note.name].join('\t')));
+// log(notes.length);
 // logJson(activeNotesByNumber);
 // console.log(JSON.stringify(song,0,2));
 
@@ -56,10 +56,29 @@ const findExtrema = (xs, f1, f2) => {
     max: f2(xs[0]),
   });
 }
+// log(findExtrema([4,3,5,7,9,61,3]));
+// log(findExtrema([4,3,5,7,-9,61,3], x=>-x));
+// log(findExtrema([4,3,5,7,-9,61,3], x=>-x, x=>x*x));
 
 const noteExtrema = {
   time:     findExtrema(notes, note=>note.time.start, note=>note.time.end),
   velocity: findExtrema(notes, note=>note.velocity),
   number:   findExtrema(notes, note=>note.number),
 };
-logJson(noteExtrema);
+// logJson(noteExtrema);
+
+
+log(
+`<?xml version="1.0"?>
+<svg
+    width="${  noteExtrema.time   .max / 10}"
+    height="${ noteExtrema.number .max * 10 + 20}"
+    xmlns="http://www.w3.org/2000/svg"
+    >
+`);
+_.each(notes, note=>{
+  log(`  <rect x="${note.time.start/10}" y="${note.number*10}" width="${note.time.duration/10}" height="10" />`);
+})
+log(`
+</svg>
+`);
