@@ -76,9 +76,10 @@ log(`<?xml version="1.0"?>
   -->
 
   <svg
+      xmlns="http://www.w3.org/2000/svg"
       width="${  noteExtrema.time   .max / 10 + 20}"
       height="${ noteExtrema.number .max * 10 + 20}"
-      xmlns="http://www.w3.org/2000/svg"
+      style="shape-rendering:crispEdges;"
       >
 
     <style>
@@ -88,13 +89,19 @@ log(`<?xml version="1.0"?>
 `);
 
 _.each(notes, note=>{
+  let hsl = [
+    (note.number - MIDIUtils.noteNameToNoteNumber('C-3')) * (360/12),
+    "80%",
+    127-Math.floor(note.velocity/127*100)+"%"
+  ];
   log(`\
       <rect
         x="${note.time.start/10}"
         y="${fy(note.number)}"
         width="${note.time.duration/10}"
-        height="10"
-        style="fill:hsl(0,0%,${127-Math.floor(note.velocity/127*100)}%)"
+        height="9"
+        style="fill:hsl(${hsl.join(', ')})"
+        data-number="${note.number}"
         data-name="${note.name}"
         data-velocity="${note.velocity}"      />\
   `);
