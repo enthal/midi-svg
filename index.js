@@ -67,17 +67,21 @@ const noteExtrema = {
 };
 // logJson(noteExtrema);
 
-
-log(
-`<?xml version="1.0"?>
+const fx = time => time / 10 + 10;
+const fy = number => (noteExtrema.number.max - number) * 10 + 10;
+log(`\
+<?xml version="1.0"?>
+<!--
+${toJsonInd(noteExtrema)}
+-->
 <svg
-    width="${  noteExtrema.time   .max / 10}"
+    width="${  noteExtrema.time   .max / 10 + 20}"
     height="${ noteExtrema.number .max * 10 + 20}"
     xmlns="http://www.w3.org/2000/svg"
     >
 `);
 _.each(notes, note=>{
-  log(`  <rect x="${note.time.start/10}" y="${note.number*10}" width="${note.time.duration/10}" height="10" />`);
+  log(`  <rect x="${note.time.start/10}" y="${fy(note.number)}" width="${note.time.duration/10}" height="10" data-name="${note.name}" />`);
 })
 log(`
 </svg>
