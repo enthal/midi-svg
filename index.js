@@ -55,29 +55,11 @@ const findExtrema = (xs, f1, f2) => {
     min: f1(xs[0]),
     max: f2(xs[0]),
   });
-
 }
 
-log(findExtrema([4,3,5,7,9,61,3]));
-log(findExtrema([4,3,5,7,-9,61,3], x=>-x));
-log(findExtrema([4,3,5,7,-9,61,3], x=>-x, x=>x*x));
-
-// const extrema = {
-//   time: {
-//     min: _.minBy(notes, note=>note.time.start),
-//     max: _.maxBy(notes, note=>note.time.end),
-//   },
-//   velocity: {
-//     min: _.minBy(notes, 'velocity'),
-//     max: _.maxBy(notes, 'velocity'),
-//   },
-// };
 const noteExtrema = {
   time:     findExtrema(notes, note=>note.time.start, note=>note.time.end),
   velocity: findExtrema(notes, note=>note.velocity),
   number:   findExtrema(notes, note=>note.number),
 };
 logJson(noteExtrema);
-
-
-
